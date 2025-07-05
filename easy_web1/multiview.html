@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>多列数据图表展示</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; display:flex; transition:background 0.3s,color 0.3s; }
+    .dark { background:#1e1e1e; color:#ccc; }
+    .sidebar{width:200px;background:#2c3e50;color:#fff;padding:20px;height:100vh}
+    .sidebar button{width:100%;padding:10px;margin:10px 0;border:none;background:#3498db;color:#fff;font-size:16px;border-radius:4px;cursor:pointer}
+    .main{flex:1;padding:20px}
+    .chart-container{width:100%;height:600px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .upload-section{text-align:center;margin-top:30px}
+    select,input[type="file"],button{margin:10px;padding:8px 12px;font-size:16px}
+    .checkbox-group{text-align:center;margin-top:10px;line-height:1.8}
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <button onclick="location.href='index.html'">双列数据图表</button>
+    <button onclick="location.href='multiview.html'">多列数据图表</button>
+    <button id="themeBtn">切换主题</button>
+  </div>
+  <div class="main">
+    <div class="upload-section">
+      <h2>多列 CSV 数据图表</h2>
+      <input type="file" id="csvFile" accept=".csv" />
+      <select id="chartType">
+        <option value="line">折线图</option>
+        <option value="area">面积图</option>
+        <option value="bar">柱状图</option>
+        <option value="scatter">散点图</option>
+      </select>
+      <select id="xSelector"></select>
+      <div id="yCheckboxes" class="checkbox-group"></div>
+      <button id="exportBtn">导出图表</button>
+    </div>
+    <div id="chart" class="chart-container"></div>
+  </div>
+<script>
+let isDark = false;
+let chart = echarts.init(document.getElementById('chart'));
+let parsedData = null;
+
+// 主题切换
+themeBtn.onclick = () => {
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  chart.dispose();
+  chart = echarts.init(document.getElementById('chart'), isDark ? 'dark' : null);
+  renderChart();
+};
+
+csvFile.onchange = e => {
+  const file = e.target.files[0]; if(!file) return;
+  Papa.parse(file,{header:true,skipEmptyLines:true,complete:r=>{
+    parsedData = r.data; setupSelectors(); renderChart();
+  }});
+};
+
+chartType.onchange = renderChart;
+function setupSelectors(){
+  const keys = Object.keys(parsedData[0]);
+  xSelector.innerHTML = keys.map(k=>`<option value="${k}">${k}</option>`).join('');
+  yCheckboxes.innerHTML = keys.slice(1).map(k=>`<label><input type="checkbox" value="${k}" checked> ${k}</label><br>`).join('');
+  xSelector.onchange = renderChart;
+  yCheckboxes.onchange = renderChart;
+}
+exportBtn.onclick = ()=>{
+  const link=document.createElement('a');
+  link.href=chart.getDataURL({type:'png'});
+  link.download='chart.png'; link.click();
+};
+function renderChart(){
+  if(!parsedData) return;
+  const t=chartType.value;
+  const xKey=xSelector.value;
+  const yKeys=[...document.querySelectorAll('#yCheckboxes input:checked')].map(i=>i.value);
+  if(!xKey||yKeys.length===0) return;
+  const x=parsedData.map(r=>r[xKey]);
+  const series=yKeys.map(col=>({name:col,type:t==='area'?'line':t,data:parsedData.map(r=>parseFloat(r[col])),...(t==='area'?{areaStyle:{}}:{})}));
+  const option={tooltip:{trigger:'axis'},legend:{top:'bottom'},dataZoom:[{type:'slider'},{type:'inside'}],xAxis:{type:'category',data:x},yAxis:{type:'value'},series};
+  chart.clear();
+  chart.setOption(option);
+}
+</script>
+</body>
+</html>

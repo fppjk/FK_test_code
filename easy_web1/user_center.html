@@ -1,0 +1,117 @@
+<!-- 个人中心 -->
+ <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>个人中心 - 数据可视化平台</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    p {
+      font-size: 16px;
+    }
+    .setting {
+      margin-top: 30px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    select, input[type="text"] {
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <header>个人中心</header>
+  <div class="container">
+    <h2>用户信息</h2>
+    <p><strong>用户名：</strong><span id="username">访客</span></p>
+    <p><strong>登录状态：</strong><span id="loginStatus">未登录</span></p>
+
+    <div class="setting">
+      <h2>偏好设置</h2>
+      <label for="theme">主题风格：</label>
+      <select id="theme">
+        <option value="light">浅色</option>
+        <option value="dark">深色</option>
+      </select>
+
+      <label for="language">界面语言：</label>
+      <select id="language">
+        <option value="zh">简体中文</option>
+        <option value="en">English</option>
+      </select>
+
+      <label for="note">我的数据标记：</label>
+      <input type="text" id="note" placeholder="可用于标记文件或偏好描述">
+
+      <button onclick="saveSettings()">保存设置</button>
+    </div>
+  </div>
+
+  <script>
+    // 加载用户信息
+    document.getElementById('username').innerText = localStorage.getItem('username') || '访客';
+    document.getElementById('loginStatus').innerText = localStorage.getItem('token') ? '已登录' : '未登录';
+
+    // 偏好设置保存
+    function saveSettings() {
+      const theme = document.getElementById('theme').value;
+      const lang = document.getElementById('language').value;
+      const note = document.getElementById('note').value;
+
+      localStorage.setItem('theme', theme);
+      localStorage.setItem('language', lang);
+      localStorage.setItem('user_note', note);
+
+      alert('设置已保存');
+    }
+
+    // 加载保存的设置
+    window.onload = () => {
+      document.getElementById('theme').value = localStorage.getItem('theme') || 'light';
+      document.getElementById('language').value = localStorage.getItem('language') || 'zh';
+      document.getElementById('note').value = localStorage.getItem('user_note') || '';
+    };
+  </script>
+</body>
+</html>

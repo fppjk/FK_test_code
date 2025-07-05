@@ -1,0 +1,96 @@
+<!-- feedback.html 用户反馈页面 -->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>用户反馈 - 数据可视化平台</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fb;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <header>用户反馈</header>
+  <div class="container">
+    <h2>欢迎提出建议与反馈</h2>
+    <form onsubmit="submitFeedback(event)">
+      <label for="name">姓名</label>
+      <input type="text" id="name" placeholder="请输入您的姓名" required>
+
+      <label for="email">邮箱</label>
+      <input type="email" id="email" placeholder="请输入您的邮箱" required>
+
+      <label for="message">反馈内容</label>
+      <textarea id="message" rows="6" placeholder="请输入您的宝贵建议或问题" required></textarea>
+
+      <button type="submit">提交反馈</button>
+    </form>
+  </div>
+
+  <script>
+    function submitFeedback(e) {
+      e.preventDefault();
+      alert("感谢您的反馈！我们会尽快处理。");
+      document.querySelector('form').reset();
+    }
+  </script>
+  <!-- <div class="contact">
+  若有问题，可联系开发者 <a href="mailto:fangjk183@gmail.com">fangjk183@gmail.com</a>
+</div> -->
+<div class="contact" style="text-align:center;">若有问题，可联系开发者 <a href="mailto:fangjk183@gmail.com">fangjk183@gmail.com</a></div>
+  <footer style="text-align:center; padding:20px; background-color:#f4f7fb; color:#666;">
+    © 2025 数据可视化平台
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+1.node server.js
+2.run home.html
+
+

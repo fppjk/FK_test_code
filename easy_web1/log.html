@@ -1,0 +1,95 @@
+<!-- 日志查看页面log.html -->
+ <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>操作日志查看</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    table {
+      width: 90%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .back {
+      display: block;
+      text-align: center;
+      margin: 20px auto;
+      text-decoration: none;
+      color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>日志记录</h1>
+    <p>以下为用户操作日志（数据库记录）</p>
+  </header>
+
+  <table>
+    <thead>
+      <tr>
+        <th>用户名</th>
+        <th>操作</th>
+        <th>文件名</th>
+        <th>图表类型</th>
+        <th>时间</th>
+      </tr>
+    </thead>
+    <tbody id="logTable">
+      <!-- JavaScript 填充日志数据 -->
+    </tbody>
+  </table>
+
+  <a class="back" href="home.html">返回首页</a>
+
+  <script>
+    fetch('http://localhost:3000/api/logs')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('logTable');
+        if (!data.length) {
+          tbody.innerHTML = '<tr><td colspan="5">暂无日志记录</td></tr>';
+        } else {
+          tbody.innerHTML = data.map(row => `
+            <tr>
+              <td>${row.username}</td>
+              <td>${row.action}</td>
+              <td>${row.filename || '-'}</td>
+              <td>${row.chart_type || '-'}</td>
+              <td>${new Date(row.timestamp).toLocaleString()}</td>
+            </tr>`).join('');
+        }
+      })
+      .catch(err => {
+        console.error('日志加载中：', err);
+        document.getElementById('logTable').innerHTML = '<tr><td colspan="5">日志加载中</td></tr>';
+      });
+  </script>
+</body>
+</html>

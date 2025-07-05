@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>简易数据分析</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; }
+    .container { max-width: 960px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #3498db; color: white; }
+    input[type=file] { margin-top: 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>CSV 数据摘要统计</h2>
+  <input type="file" id="csvFile" accept=".csv" />
+  <div id="result"></div>
+</div>
+
+<script>
+function isNumeric(val) {
+  return !isNaN(parseFloat(val)) && isFinite(val);
+}
+
+function analyze(data) {
+  const fields = Object.keys(data[0]);
+  const stats = fields.map(field => {
+    const values = data.map(row => row[field]);
+    const nonEmpty = values.filter(v => v !== '' && v != null);
+    const missing = values.length - nonEmpty.length;
+    const sample = nonEmpty[0];
+
+    if (isNumeric(sample)) {
+      const nums = nonEmpty.map(Number);
+      nums.sort((a,b) => a - b);
+      const mean = nums.reduce((a,b) => a + b, 0) / nums.length;
+      const mid = nums.length % 2 === 0 ? (nums[nums.length/2 - 1] + nums[nums.length/2]) / 2 : nums[Math.floor(nums.length/2)];
+      return {
+        field,
+        type: '数值',
+        count: values.length,
+        missing,
+        min: Math.min(...nums),
+        max: Math.max(...nums),
+        mean: mean.toFixed(2),
+        median: mid.toFixed(2)
+      };
+    } else {
+      const freqs = {};
+      for (const val of nonEmpty) freqs[val] = (freqs[val] || 0) + 1;
+      const sorted = Object.entries(freqs).sort((a,b) => b[1]-a[1]);
+      return {
+        field,
+        type: '文本',
+        count: values.length,
+        missing,
+        unique: sorted.length,
+        most_common: sorted[0][0] + ` (${sorted[0][1]})`
+      };
+    }
+  });
+  return stats;
+}
+
+function renderTable(stats) {
+  const headers = {
+    '数值': ['字段名','类型','总数','缺失值','最小','最大','平均值','中位数'],
+    '文本': ['字段名','类型','总数','缺失值','不同值数','最常见值']
+  };
+  let html = '';
+  for (const group of ['数值','文本']) {
+    const groupStats = stats.filter(s => s.type === group);
+    if (groupStats.length === 0) continue;
+    html += `<table><thead><tr>` + headers[group].map(h=>`<th>${h}</th>`).join('') + `</tr></thead><tbody>`;
+    for (const row of groupStats) {
+      html += '<tr>';
+      if (group === '数值') {
+        html += `<td>${row.field}</td><td>${row.type}</td><td>${row.count}</td><td>${row.missing}</td>` +
+                `<td>${row.min}</td><td>${row.max}</td><td>${row.mean}</td><td>${row.median}</td>`;
+      } else {
+        html += `<td>${row.field}</td><td>${row.type}</td><td>${row.count}</td><td>${row.missing}</td>` +
+                `<td>${row.unique}</td><td>${row.most_common}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table><br>';
+  }
+  document.getElementById('result').innerHTML = html;
+}
+
+csvFile.onchange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: res => {
+      if (res.data.length === 0) return alert('CSV 内容为空');
+      const stats = analyze(res.data);
+      renderTable(stats);
+    },
+    error: () => alert('CSV 解析失败')
+  });
+};
+</script>
+</body>
+</html>

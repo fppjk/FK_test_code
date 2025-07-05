@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>数据可视化平台 ‑ 首页</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+      background-color: #eef3f8;
+      color: #333;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header button {
+      padding: 8px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    header button:hover {
+      background-color: #2980b9;
+    }
+    main {
+      padding: 40px;
+      max-width: 1000px;
+      margin: 40px auto;
+      text-align: center;
+    }
+    main h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    main p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .images {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .images img {
+      width: 220px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 25%;
+      left: 50%;
+      transform: translate(-50%, -25%);
+      background: white;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      width: 300px;
+    }
+    .modal input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .modal button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>数据可视化平台</div>
+    <div>
+      <button onclick="showLogin()">登录</button>
+      <button onclick="showRegister()">注册</button>
+      <button onclick="goToUserCenter()">个人中心</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>欢迎使用数据可视化平台</h1>
+    <p>本平台集成了丰富的数据处理与可视化功能模块，包括：</p>
+    <ul style="text-align:left; display:inline-block; margin-bottom:30px;">
+      <li>CSV/JSON 文件格式互转</li>
+      <li>数据摘要统计与字段分析</li>
+      <li>单列和多列CSV图表可视化（支持导出）</li>
+      <li>多种图表类型、主题切换、筛选交互</li>
+    </ul>
+    <div class="images">
+      <img src="image/1.jpg" alt="图形示例1">
+      <img src="image/2.jpg" alt="图形示例2">
+      <img src="image/3.jpg" alt="图形示例3">
+      <img src="image/4.jpg" alt="图形示例4">
+    </div>
+    <p>请点击右上角登录后，从功能菜单中选择你需要的功能模块。</p>
+  </main>
+
+  <div id="overlay" onclick="hideModals()"></div>
+
+  <!-- 登录弹窗 -->
+  <div id="loginModal" class="modal">
+    <h3>用户登录</h3>
+    <input type="text" id="username" placeholder="用户名" />
+    <input type="password" id="password" placeholder="密码" />
+    <button onclick="login()">登录</button>
+    <button onclick="hideModals()" style="background:#aaa; color:white;">取消</button>
+  </div>
+
+  <!-- 注册弹窗 -->
+  <div id="registerModal" class="modal">
+    <h3>用户注册</h3>
+    <input type="text" id="newUsername" placeholder="用户名" />
+    <input type="password" id="newPassword" placeholder="密码" />
+    <button onclick="register()">注册</button>
+    <button onclick="hideModals()" style="background:#aaa; color:white;">取消</button>
+  </div>
+
+  <script>
+    function showLogin() {
+      document.getElementById('loginModal').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function showRegister() {
+      document.getElementById('registerModal').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function hideModals() {
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    async function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!username || !password) return alert('必须填写用户名和密码');
+
+      try {
+        const res = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        if (!res.ok) throw new Error((await res.json()).msg);
+        const { token } = await res.json();
+        localStorage.setItem('token', token);
+        location.href = 'dashboard.html';
+      } catch (e) {
+        alert('登录失败：' + e.message);
+      }
+    }
+
+    async function register() {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+      if (!username || !password) return alert('用户名和密码不能为空');
+
+      try {
+        const res = await fetch('http://localhost:3000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.msg);
+        alert('注册成功，请登录');
+        hideModals();
+      } catch (e) {
+        alert('注册失败：' + e.message);
+      }
+    }
+
+    function goToUserCenter() {
+      const username = localStorage.getItem('username');
+      if (!username) {
+        alert('未登录，请先登录');
+      } else {
+        location.href = 'user_center.html';
+      }
+    }
+  </script>
+</body>
+</html>

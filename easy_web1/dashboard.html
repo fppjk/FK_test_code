@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>数据可视化平台 - 功能面板</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+
+    .topbar {
+      background-color: #2c3e50;
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .userinfo {
+      text-align: center;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .dashboard-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 60px);
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 450px;
+    }
+
+    .card h2 {
+      margin-bottom: 24px;
+      font-size: 22px;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .module-grid button {
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .module-grid button:hover {
+      background-color: #2980b9;
+    }
+
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">📊 数据可视化平台</div>
+    <div class="userinfo">欢迎，<span id="username">用户</span></div>
+  </header>
+  <button onclick="location.href='user_center.html'"
+          style="position: fixed; top: 20px; right: 110px; z-index: 9999;
+                padding: 8px 14px; border: none; background-color: #2c3e50;
+                color: white; border-radius: 4px; cursor: pointer;">个人中心
+  </button>
+  <main class="dashboard-container">
+    <div class="card">
+      <h2>请选择一个功能模块</h2>
+      <div class="module-grid">
+        <button onclick="location.href='index.html'">📈 双列数据可视化</button>
+        <button onclick="location.href='multiview.html'">📊 多列数据可视化</button>
+        <button onclick="location.href='conversion.html'">📂 文件格式转换</button>
+        <button onclick="location.href='analyze.html'">📑 简易数据分析</button>
+        <button onclick="location.href='feedback.html'">👤 用户反馈</button>
+        <button onclick="location.href='help.html'">❓ 使用帮助</button>
+        <button onclick="location.href='log.html'">📝 操作日志</button>
+        <button onclick="location.href='home.html'">🔙 返回首页</button>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

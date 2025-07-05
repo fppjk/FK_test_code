@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>双列数据图表</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;display:flex;transition:background 0.3s,color 0.3s}
+    .light-mode{background:#f0f2f5;color:#000}
+    .dark-mode{background:#1e1e1e;color:#fff}
+    .sidebar{width:200px;background:#2c3e50;color:#fff;padding:20px;height:100vh}
+    .sidebar button{width:100%;padding:10px;margin:10px 0;border:none;background:#3498db;color:#fff;font-size:16px;border-radius:4px;cursor:pointer}
+    .main{flex:1;padding:20px}
+    .upload-section{text-align:center;margin-top:30px}
+    select,input[type="file"],input[type="number"],button{margin:10px;padding:8px 12px;font-size:16px}
+    #chart{width:100%;max-width:900px;height:500px;margin:30px auto;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  </style>
+</head>
+<body class="light-mode">
+  <div class="sidebar">
+    <button onclick="location.href='index.html'">双列数据图表</button>
+    <button onclick="location.href='multiview.html'">多列数据图表</button>
+    <button onclick="toggleTheme()">切换主题</button>
+  </div>
+
+  <div class="main">
+    <div class="upload-section">
+      <h2>上传 CSV 并选择图表类型</h2>
+      <input type="file" id="csvFile" accept=".csv" />
+      <div>
+        X轴: <select id="xSelect"></select>
+        Y轴: <select id="ySelect"></select>
+      </div>
+      <select id="chartType">
+        <option value="line">折线图</option>
+        <option value="area">面积图</option>
+        <option value="bar">柱状图</option>
+        <option value="scatter">散点图</option>
+        <option value="pie">饼图</option>
+      </select>
+      <button id="exportBtn">导出图表</button>
+      <div style="margin-top:10px;display:flex;justify-content:center;align-items:center;gap:8px" id="filterBox" hidden>
+        起始 <input type="number" id="rangeMin" style="width:100px"> 结束 <input type="number" id="rangeMax" style="width:100px">
+        <button id="applyFilter">筛选</button>
+      </div>
+    </div>
+    <div id="chart"></div>
+  </div>
+
+<script>
+let chart = echarts.init(document.getElementById('chart'));
+let dataFull = [], dataFiltered = [], headers = [];
+let currentFileName = '';// 记录最近一次上传的文件名
+
+function toggleTheme(){document.body.classList.toggle('dark-mode');document.body.classList.toggle('light-mode');}
+
+/**
+ * 写操作日志到后端
+ * @param {string} action   操作名称(上传CSV文件/切换图表类型/应用筛选器/导出图表)
+ * @param {string} filename 文件名，可为空
+ * @param {string} chart    图表类型，可为空
+ */
+function logUserAction(action, filename='', chart=''){
+  fetch('http://localhost:3000/api/log',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      username:localStorage.getItem('username')||'访客',
+      filename,
+      chart_type:chart,
+      action
+    })
+  }).then(r=>{if(!r.ok) console.error('日志写入失败',r.status);});
+}
+
+// ============= 上传 CSV =====================
+csvFile.onchange=e=>{
+  const file=e.target.files[0];if(!file) return;currentFileName=file.name;
+  Papa.parse(file,{header:true,skipEmptyLines:true,complete:r=>{
+    if(r.data.length===0)return alert('文件为空');headers=Object.keys(r.data[0]);if(headers.length<2)return alert('至少两列');
+    dataFull=r.data;dataFiltered=[...dataFull];
+    xSelect.innerHTML=headers.map(h=>`<option value="${h}">${h}</option>`).join('');
+    ySelect.innerHTML=headers.map(h=>`<option value="${h}">${h}</option>`).join('');ySelect.selectedIndex=1;
+    filterBox.hidden=isNaN(parseFloat(dataFull[0][headers[0]]));
+    if(!filterBox.hidden){rangeMin.value=dataFull[0][headers[0]];rangeMax.value=dataFull[dataFull.length-1][headers[0]];}
+    render();
+    // 日志：上传
+    logUserAction('上传CSV文件',currentFileName,'');
+  }});
+};
+
+// ============= 监听交互 =====================
+chartType.onchange=()=>{if(dataFiltered.length){logUserAction('切换图表类型',currentFileName,chartType.value);render();}};
+
+actionOnSelect=(/* for x/y change */)=>render();
+xSelect.onchange=actionOnSelect;ySelect.onchange=actionOnSelect;
+
+applyFilter.onclick=()=>{
+  const min=parseFloat(rangeMin.value),max=parseFloat(rangeMax.value);
+  dataFiltered=dataFull.filter(r=>{const v=parseFloat(r[xSelect.value]);return !isNaN(v)&&v>=min&&v<=max;});
+  logUserAction('应用筛选器',currentFileName,chartType.value);
+  render();
+};
+
+exportBtn.onclick=()=>{
+  const img=chart.getDataURL({type:'png'});
+  const a=document.createElement('a');a.href=img;a.download='chart.png';a.click();
+  logUserAction('导出图表',currentFileName,chartType.value);
+};
+
+// ============= 渲染图表 =====================
+function render(){
+  const t=chartType.value,xKey=xSelect.value,yKey=ySelect.value;
+  const x=dataFiltered.map(r=>r[xKey]);const y=dataFiltered.map(r=>parseFloat(r[yKey]));
+  let option; if(t==='pie'){option={tooltip:{trigger:'item'},legend:{type:'scroll',orient:'vertical',left:10,top:20,bottom:20},series:[{type:'pie',radius:['40%','70%'],avoidLabelOverlap:true,label:{show:false},emphasis:{label:{show:true,fontSize:16,fontWeight:'bold'}},labelLine:{show:false},data:x.map((n,i)=>({name:n,value:y[i]}))}]};}
+  else{option={tooltip:{trigger:'axis'},dataZoom:[{type:'slider',start:0,end:100},{type:'inside',start:0,end:100}],xAxis:{type:'category',data:x},yAxis:{type:'value'},series:[{type:t==='area'?'line':t,data:y,...(t==='area'?{areaStyle:{}}:{})}]};}
+  chart.setOption(option,true);
+}
+</script>
+</body>
+</html>
