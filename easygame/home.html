@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前端小游戏合集 - 欢迎页</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .home-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #e3f2fd 0%, #fffde7 100%);
+    }
+    .home-title {
+      font-size: 2.6rem;
+      font-weight: bold;
+      margin-bottom: 18px;
+      letter-spacing: 2px;
+      color: #1976d2;
+      text-shadow: 0 2px 8px rgba(25,118,210,0.08);
+    }
+    .home-desc {
+      font-size: 1.2rem;
+      color: #444;
+      margin-bottom: 36px;
+      text-align: center;
+      max-width: 480px;
+    }
+    .home-btn {
+      display: inline-block;
+      background: #1976d2;
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 14px 48px;
+      border-radius: 32px;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(25,118,210,0.10);
+      transition: background 0.2s;
+      margin-bottom: 32px;
+    }
+    .home-btn:hover {
+      background: #1565c0;
+    }
+  </style>
+</head>
+<body>
+  <div class="home-container">
+    <button class="home-btn" onclick="location.href='index.html'">进入小游戏合集</button>
+    <div class="home-title">前端小游戏合集</div>
+    <div class="home-desc">
+      欢迎来到前端小游戏合集！<br>
+      这里收录了贪吃蛇、拼图、2048、井字棋等经典小游戏，全部基于前端技术实现，开源免费，适合学习、娱乐和交流。<br>
+      点击上方按钮，开启你的游戏之旅吧！
+    </div>
+  </div>
+</body>
+</html> 

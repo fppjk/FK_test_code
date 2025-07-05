@@ -1,0 +1,35 @@
+<!-- 井字棋 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>井字棋 - 前端小游戏合集</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>前端小游戏合集</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li><a href="games.html">游戏合集</a></li>
+        <li><a href="about.html">关于项目</a></li>
+        <li><a href="setting.html">设置</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h2 style="text-align:center;">井字棋</h2>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+      <div id="tic-tac-toe-status">当前回合：X</div>
+      <div id="tic-tac-toe-board" style="width:300px;height:300px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px;background:#eee;border-radius:8px;"></div>
+      <button id="tic-tac-toe-restart-btn">重新开始</button>
+    </div>
+  </main>
+  <footer>
+    <p>© 2025 前端小游戏合集</p>
+  </footer>
+  <script src="js/tic-tac-toe.js"></script>
+</body>
+</html> 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置 - 前端小游戏合集</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>前端小游戏合集</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li><a href="games.html">游戏合集</a></li>
+        <li><a href="about.html">关于项目</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h2 style="text-align:center;">设置</h2>
+    <form class="setting-form">
+      <div class="setting-item">
+        <label>主题切换：</label>
+        <select id="theme-select">
+          <option value="light">浅色</option>
+          <option value="dark">深色</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label>音效：</label>
+        <input type="checkbox" id="sound-toggle" checked> 开启
+      </div>
+      <div class="setting-item">
+        <label>默认难度：</label>
+        <select id="difficulty-select">
+          <option value="easy">简单</option>
+          <option value="normal">普通</option>
+          <option value="hard">困难</option>
+        </select>
+      </div>
+      <button type="submit">保存设置</button>
+    </form>
+  </main>
+  <footer>
+    <p>© 2024 前端小游戏合集</p>
+  </footer>
+</body>
+</html> 

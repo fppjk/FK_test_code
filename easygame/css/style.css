@@ -1,0 +1,137 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Arial', sans-serif;
+  background: #f7f8fa;
+  color: #222;
+}
+header {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 24px 0 12px 0;
+  text-align: center;
+}
+header h1 {
+  margin: 0 0 8px 0;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+}
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+nav a {
+  text-decoration: none;
+  color: #1976d2;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: #1565c0;
+}
+main {
+  max-width: 700px;
+  margin: 40px auto 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  padding: 32px 24px;
+}
+.intro {
+  text-align: center;
+}
+footer {
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+  margin: 48px 0 16px 0;
+}
+.game-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.game-card {
+  background: #f5faff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  padding: 28px 24px 20px 24px;
+  width: 220px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.game-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+}
+.game-card p {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 18px;
+}
+.game-btn {
+  display: inline-block;
+  background: #1976d2;
+  color: #fff;
+  padding: 8px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+.game-btn:hover {
+  background: #1565c0;
+}
+.guide-link {
+  display: block;
+  color: #1976d2;
+  font-size: 0.98rem;
+  margin-top: 2px;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.guide-link:hover {
+  color: #0d47a1;
+}
+.setting-form {
+  max-width: 400px;
+  margin: 32px auto 0 auto;
+  background: #f5faff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  padding: 32px 24px 24px 24px;
+}
+.setting-item {
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.setting-item label {
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+.setting-form button[type="submit"] {
+  width: 100%;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.setting-form button[type="submit"]:hover {
+  background: #1565c0;
+} 

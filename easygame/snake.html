@@ -1,0 +1,35 @@
+<!-- 贪吃蛇 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贪吃蛇 - 前端小游戏合集</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>前端小游戏合集</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li><a href="games.html">游戏合集</a></li>
+        <li><a href="about.html">关于项目</a></li>
+        <li><a href="setting.html">设置</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h2 style="text-align:center;">贪吃蛇</h2>  
+    <div style="display:flex;flex-direction:column;align-items:center;gap:18px;"> <!-- 游戏区域 -->
+      <div id="snake-score">分数：0</div>
+      <canvas id="snake-canvas" width="400" height="400" style="background:#222;border-radius:8px;"></canvas>
+      <button id="snake-start-btn">开始游戏</button>
+    </div>
+  </main>
+  <footer>
+    <p>© 2025 前端小游戏合集</p>
+  </footer>
+  <script src="js/snake.js"></script>
+</body>
+</html> 
